@@ -297,7 +297,47 @@ En Java, un enumerado **sí es una clase**, específicamente una clase especial 
 En términos de encapsulación, los enumerados en Java ofrecen ventajas significativas: pueden tener **atributos privados** con valores específicos para cada constante enumerada, **constructores privados** (los enumerados no permiten constructores públicos porque las instancias están predefinidas), y **métodos públicos** que operan sobre esos atributos privados. Esto permite ocultar detalles de implementación mientras se proporciona una interfaz pública rica. Por ejemplo, un enum `Mes` podría tener un atributo privado `numeroDias` inicializado en el constructor privado con valores diferentes para cada mes, y un método público `getDias()` para consultarlo, manteniendo la encapsulación y garantizando que los valores no puedan modificarse desde el exterior. Además, garantizan que no se pueden crear nuevas instancias fuera de las predefinidas, proporcionando un control total sobre el conjunto de valores posibles.
 
 
-## 23. Crea un tipo enumerado en Java que se llame `Mes`, con doce posibles instancias y que además proporcione métodos para obtener cuántos días tiene ese mes, el ordinal de ese mes en el año (1-12), empleando atributos privados y constructores del tipo enumerado. Añade además cuatro métodos para devolver si ese mes tiene algunos días de invierno, primavera, verano u otoño, indicando con un booleano el hemisferio (norte o sur, parámetro `enHemisferioNorte`). Es decir: `esDePrimavera(boolean esHemisferioNorte)`, `esDeVerano(boolean esHemisferioNorte)`, `esDeOtoño(boolean esHemisferioNorte)`, `esDeInvierno(boolean esHemisferioNorte)`
+## 23. Crea un tipo enumerado en Java que se llame `Mes`, con doce posibles instancias y que además proporcione métodos para obtener cuántos días tiene ese mes, el ordinal de ese mes en el año (1-12), empleando atributos privados y constructores del tipo enumerado.
+
+```java
+public enum Mes {
+    ENERO(1, 31),
+    FEBRERO(2, 28),
+    MARZO(3, 31),
+    ABRIL(4, 30),
+    MAYO(5, 31),
+    JUNIO(6, 30),
+    JULIO(7, 31),
+    AGOSTO(8, 31),
+    SEPTIEMBRE(9, 30),
+    OCTUBRE(10, 31),
+    NOVIEMBRE(11, 30),
+    DICIEMBRE(12, 31);
+    
+    private final int ordinal;
+    private final int numeroDias;
+    
+    private Mes(int ordinal, int numeroDias) {
+        this.ordinal = ordinal;
+        this.numeroDias = numeroDias;
+    }
+    
+    public int getDias() {
+        return numeroDias;
+    }
+    
+    public int getOrdinal() {
+        return ordinal;
+    }
+}
+```
+
+Este enumerado demuestra el poder de la encapsulación en Java: cada mes tiene atributos privados (`ordinal` y `numeroDias`) que solo pueden establecerse mediante el constructor privado, haciéndolos inmutables y protegidos. Los métodos públicos (`getDias()` y `getOrdinal()`) proporcionan la interfaz para consultar información sobre cada mes. Las instancias del enum son constantes predefinidas (`ENERO`, `FEBRERO`, etc.) que no pueden modificarse ni crearse nuevas desde el exterior.
+
+El uso sería: `Mes mes = Mes.MARZO; int dias = mes.getDias(); // 31; int numero = mes.getOrdinal(); // 3`. Este diseño es muy superior a usar constantes enteras como en C (`#define ENERO 1`), ya que proporciona seguridad de tipos, comportamiento asociado, y garantiza que solo existen los doce valores válidos definidos.
+
+
+## 24. Añade a la clase `Mes` del ejercicio anterior cuatro métodos para devolver si ese mes tiene algunos días de invierno, primavera, verano u otoño, indicando con un booleano el hemisferio (norte o sur, parámetro `enHemisferioNorte`). Es decir: `esDePrimavera(boolean esHemisferioNorte)`, `esDeVerano(boolean esHemisferioNorte)`, `esDeOtoño(boolean esHemisferioNorte)`, `esDeInvierno(boolean esHemisferioNorte)`
 
 ```java
 public enum Mes {
@@ -364,6 +404,6 @@ public enum Mes {
 }
 ```
 
-Este enumerado demuestra el poder de la encapsulación en Java: cada mes tiene atributos privados (`ordinal` y `numeroDias`) que solo pueden establecerse mediante el constructor privado, haciéndolos inmutables y protegidos. Los métodos públicos (`getDias()`, `getOrdinal()`, y los de estaciones) proporcionan la interfaz para consultar información sobre cada mes, ocultando los detalles de cómo se determina la estación. Las instancias del enum son constantes predefinidas (`ENERO`, `FEBRERO`, etc.) que no pueden modificarse ni crearse nuevas desde el exterior.
+Los métodos de estaciones amplían la funcionalidad del enum `Mes` utilizando el atributo privado `ordinal` para determinar la estación según el hemisferio. El parámetro `enHemisferioNorte` permite adaptar la respuesta a la ubicación geográfica, ya que las estaciones están invertidas entre hemisferios: cuando es verano en el norte (junio-agosto), es invierno en el sur, y viceversa.
 
-El uso sería: `Mes mes = Mes.MARZO; int dias = mes.getDias(); // 31; boolean esPrimavera = mes.esDePrimavera(true); // true en hemisferio norte`. Este diseño es muy superior a usar constantes enteras como en C (`#define ENERO 1`), ya que proporciona seguridad de tipos, comportamiento asociado, y garantiza que solo existen los doce valores válidos definidos.
+El uso sería: `Mes mes = Mes.MARZO; boolean esPrimavera = mes.esDePrimavera(true); // true en hemisferio norte; boolean esOtonio = mes.esDePrimavera(false); // false, en hemisferio sur marzo es otoño`. Esta implementación demuestra cómo los enumerados en Java pueden encapsular lógica compleja mientras mantienen una interfaz simple y clara.
